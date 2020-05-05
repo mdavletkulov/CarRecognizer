@@ -1,8 +1,9 @@
-package com.gorcer.iseeyou;
+package com.gorcer.iseeyou.model;
 
 import java.util.UUID;
 import java.util.Vector;
 
+import com.gorcer.iseeyou.service.FounderMgr;
 import org.bytedeco.javacpp.opencv_core.CvSeq;
 import org.bytedeco.javacpp.opencv_core.IplImage;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;

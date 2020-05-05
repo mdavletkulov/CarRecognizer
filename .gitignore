@@ -22,3 +22,8 @@ Images
 
 dromStat.py
 dromData
+
+# Intellij
+.idea/
+*.iml
+*.iws
