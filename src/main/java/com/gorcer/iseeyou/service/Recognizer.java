@@ -6,9 +6,16 @@ import com.gorcer.iseeyou.config.RecognizeConfig;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.opencv_core.*;
+import org.bytedeco.javacv.Java2DFrameConverter;
 import org.bytedeco.javacv.JavaCV;
+import org.bytedeco.javacv.OpenCVFrameConverter;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
@@ -440,11 +447,22 @@ public class Recognizer {
      * @param filename
      * @param mgr
      */
-    public static void process(String filename, FounderMgr mgr) {
+    public static void process(String filename, FounderMgr mgr) throws IOException {
         CvMemStorage mainStorage = CvMemStorage.create();
         mgr.start();
         FounderMgr.println("Start processing");
-        final IplImage image = cvLoadImage(filename);
+
+//        -------------
+        File img = new File("");
+        BufferedImage in = ImageIO.read(img);
+
+        BufferedImage newImage = new BufferedImage(
+                in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+
+//        ------------
+//        final IplImage image = cvLoadImage(filename);
+        final IplImage image = toIplImage(newImage);
 
         mgr.sourceImage = image;
         Vector<CvSeq> polys = new Vector<CvSeq>();
@@ -641,6 +659,14 @@ public class Recognizer {
                 cvDrawLine(image, new CvPoint(pts.position(3).x(), pts.position(3).y()), new CvPoint(pts.position(0).x(), pts.position(0).y()), CvScalar.GREEN, 1, CV_AA, 0);
             }
         }
+    }
+
+    private static IplImage toIplImage(BufferedImage bufImage) {
+
+        OpenCVFrameConverter.ToIplImage iplConverter = new OpenCVFrameConverter.ToIplImage();
+        Java2DFrameConverter java2dConverter = new Java2DFrameConverter();
+        IplImage iplImage = iplConverter.convert(java2dConverter.convert(bufImage));
+        return iplImage;
     }
 
 }
